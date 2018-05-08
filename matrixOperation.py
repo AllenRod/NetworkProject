@@ -1,6 +1,35 @@
 import sys
 import time
 
+def readMatrix(infile):
+    matrix = []
+    for line in infile.readlines():
+        if len(line) == 0:
+            continue
+        line.replace('\n', '')
+        row_str = line.split(',')
+        matrix.append([float(i) for i in row_str])
+    
+    print(len(matrix))
+    print(len(matrix[0]))
+    
+    return matrix
+
+def convertMatrixToBytes(matrix):
+    matrix_str = ''
+    
+    for i in range(len(matrix)):
+        row = matrix[i]
+        row_vals = [str(val) for val in row]
+        line = ','.join(row_vals)
+        
+        matrix_str += line + '\n'
+    
+    byte_str = matrix_str.encode()
+    
+    #print(len(byte_str))
+    return byte_str
+
 def simpleMultiplication(matrix1, matrix2):
     start_time = time.time()
     output_matrix = []
@@ -27,13 +56,6 @@ def simpleMultiplication(matrix1, matrix2):
     print('Running time: ' + str(diff))
     #print(output_matrix)
     return output_matrix
-    
-def divideAndConquer(matrix1, matrix2):
-    # divide both matrices into 4 parts
-    matrix1a = []
-    matrix1b = []
-    matrix1c = []
-    matrix1d = []
             
 if __name__ == '__main__':
 
@@ -53,28 +75,8 @@ if __name__ == '__main__':
         print('Wrong number of arguments.')
         sys.exit(0)
     
-    matrix1 = []
-    matrix2 = []
-    
-    for line in in_file_1.readlines():
-        if len(line) == 0:
-            continue
-        line.replace('\n', '')
-        row_str = line.split(',')
-        matrix1.append([float(i) for i in row_str])
-    
-    print(len(matrix1))
-    print(len(matrix1[0]))
-    
-    for line in in_file_2.readlines():
-        if len(line) == 0:
-            continue
-        line.replace('\n', '')
-        row_str = line.split(',')
-        matrix2.append([float(i) for i in row_str])
-        
-    print(len(matrix2))
-    print(len(matrix2[0]))
+    matrix1 = readMatrix(in_file_1)
+    matrix2 = readMatrix(in_file_2)
     
     if len(matrix1[0]) != len(matrix2):
         print('Matrix size error')
