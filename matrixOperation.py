@@ -20,7 +20,7 @@ def convertMatrixToBytes(matrix):
     
     for i in range(len(matrix)):
         row = matrix[i]
-        row_vals = [str(val) for val in row]
+        row_vals = ['{:.10f}'.format(val) for val in row]
         line = ','.join(row_vals)
         
         matrix_str += line + '\n'

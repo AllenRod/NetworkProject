@@ -21,7 +21,8 @@ if __name__ == '__main__':
     for i in range(n):
         for i in range(n):
             num = random.uniform(0, 1)
-            out_file.write(str(num))
+            num_str = '{:.10f}'.format(num)
+            out_file.write(num_str)
             if i + 1 < n:
                 out_file.write(',')
     
