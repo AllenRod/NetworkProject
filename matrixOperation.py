@@ -7,11 +7,11 @@ def readMatrix(infile):
         if len(line) == 0:
             continue
         line.replace('\n', '')
-        row_str = line.split(',')
-        matrix.append([float(i) for i in row_str])
+        val_str = line.split(',')
+        matrix.append([int(i) for i in val_str])
     
     print(len(matrix))
-    print(len(matrix[0]))
+    print(len(matrix[-1]))
     
     return matrix
 
@@ -20,15 +20,32 @@ def convertMatrixToBytes(matrix):
     
     for i in range(len(matrix)):
         row = matrix[i]
-        row_vals = ['{:.10f}'.format(val) for val in row]
+        row_vals = [str(val) for val in row]
         line = ','.join(row_vals)
         
         matrix_str += line + '\n'
     
-    byte_str = matrix_str.encode()
+    byte_str = matrix_str.encode('ascii')
     
     #print(len(byte_str))
     return byte_str
+    #return matrix_str
+    
+def convertBytesToMatrix(byte_str):
+    matrix_str = byte_str.decode()
+    rows = matrix_str.split('\n')
+    matrix = []
+    
+    for row in rows:
+        if len(row) == 0:
+            continue
+        val_str = row.split(',')
+        matrix.append([int(i) for i in val_str])
+        
+    print(len(matrix))
+    print(len(matrix[-1]))
+    
+    return matrix
 
 def simpleMultiplication(matrix1, matrix2):
     start_time = time.time()
