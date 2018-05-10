@@ -46,20 +46,28 @@ class SimpleTopo( Topo ):
             #else:
             #    self.addLink(s2, worker_nodes[i])
 
-def run(num_worker):
+def run(num_worker, work_split, num_iteration):
     topo = SimpleTopo(num_worker)
     net = Mininet( topo=topo, link=TCLink)
     net.addNAT().configDefault()
     net.start()
     
+    net['main'].cmd('python tcpPiMain.py ' + str(num_worker) + ' ' + str(work_split) + ' ' + str(num_iteration) + ' &')
+    time.sleep(1)
+    for i in range(num_worker):
+        worker_name = 'h' + str(i)
+        net[worker_name].cmd('python tcpPiWorker.py &')
+    
     CLI( net )
             
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 4:
         num_worker = int(sys.argv[1])
+        work_split = int(sys.argv[2])
+        num_iteration = int(sys.argv[3])
     else:
         print('Wrong number of arguments.')
         sys.exit(0)
 
     setLogLevel( 'info' )
-    run(num_worker)
+    run(num_worker, work_split, num_iteration)
