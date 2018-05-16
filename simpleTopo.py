@@ -10,7 +10,7 @@ import sys
 class SimpleTopo( Topo ):
     "Simple topology with 1 main node connecting to 4 worker nodes."
 
-    def __init__( self , num_worker):
+    def __init__( self , num_worker, loss, delay):
         "Create custom topo."
 
         # Initialize topology
@@ -31,7 +31,7 @@ class SimpleTopo( Topo ):
         worker_nodes = []
         for i in range(num_worker):
             worker_name = 'h' + str(i)
-            worker_ip = '10.0.1.' + str(i) + '/16'
+            worker_ip = '10.0.1.' + str((i + 1)) + '/16'
             worker = self.addHost(worker_name, ip=worker_ip)
             worker_nodes.append(worker)
 
@@ -39,15 +39,13 @@ class SimpleTopo( Topo ):
         self.addLink(host0, s1)
         #self.addLink(host0, s2)
         
+        delay_str = str(delay) + 'ms'
+        
         for i in range(len(worker_nodes)):
-            self.addLink(s1, worker_nodes[i])
-            #if i < 10:
-            #    self.addLink(s1, worker_nodes[i])
-            #else:
-            #    self.addLink(s2, worker_nodes[i])
+            self.addLink(s1, worker_nodes[i], loss=loss, delay=delay_str)
 
-def run(num_worker):
-    topo = SimpleTopo(num_worker)
+def run(num_worker, loss, delay):
+    topo = SimpleTopo(num_worker, loss, delay)
     net = Mininet( topo=topo, link=TCLink)
     net.addNAT().configDefault()
     net.start()
@@ -55,11 +53,13 @@ def run(num_worker):
     CLI( net )
             
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 4:
         num_worker = int(sys.argv[1])
+        loss = int(sys.argv[2])
+        delay = int(sys.argv[3])
     else:
         print('Wrong number of arguments.')
         sys.exit(0)
 
     setLogLevel( 'info' )
-    run(num_worker)
+    run(num_worker, loss, delay)
